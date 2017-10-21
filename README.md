@@ -1,0 +1,2 @@
+# PastilApp
+Pastila Decentralized Application
