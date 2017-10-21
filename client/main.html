@@ -1,0 +1,18 @@
+<head>
+  <title>PastilApp</title>
+</head>
+
+<body>
+  <div>
+    {{> myTemplate}}
+  </div>
+</body>
+
+<template name= "myTemplate">
+  <form>
+    <h3>Check ethereum Account balance</h3>
+    <input type = "text" name = "myForm">
+    <input type = "submit" value = "CheckBalance">
+    <p>Balance in account {{accnumber}} {{TemplateVar.get"accnumber"}} is <b>{{counter}} {{TemplateVar.get"counter"}}</b> ETH.</p>
+  </form>
+</template>
