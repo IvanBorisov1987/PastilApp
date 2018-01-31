@@ -1,0 +1,27 @@
+/*запуск geth с параметрами /Users/ivanborisov/Desktop/geth --dev --rpc --rpcaddr "0.0.0.0" --rpcapi "admin,debug,miner,shh,txpool,personal,eth,net,web3" console
+
+instance: Geth/v1.7.1-stable-05101641/darwin-amd64/go1.9
+
+coinbase: 0x5098b211859c944e42baa3c6084ffbe3758f1cc2
+
+at block: 0 (Thu, 01 Jan 1970 03:00:00 MSK)
+
+datadir: /var/folders/jj/h0j9kfbj2lx70kjt5yy_fl8m0000gn/T/ethereum_dev_mode
+
+modules: admin:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 shh:1.0 txpool:1.0 web3:1.0
+
+> personal.newAccount("0000") - создание нового аккаунта
+"0xb0adf1b153702c73a923e8528de214c9795c1d15"
+
+> eth.accounts - показать все аккаунты на компьютере
+["0x5098b211859c944e42baa3c6084ffbe3758f1cc2", "0xb0adf1b153702c73a923e8528de214c9795c1d15"]
+
+> eth.coinbase   - показать основной кошелек
+"0x5098b211859c944e42baa3c6084ffbe3758f1cc2"
+
+> eth.getBalance(eth.coinbase) - показать баланс основного кошелька
+0
+
+> miner.start()    запуск майнинга
+miner.stop()  остановка майнера
+*/
