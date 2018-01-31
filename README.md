@@ -1,4 +1,4 @@
-# PelmirApp
+# PillarDev Decentralization Application
 My Decentralized Application
 
 Система устанавливается на базе Linux Ubuntu 16.04
