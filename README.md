@@ -8,5 +8,5 @@ My Decentralized Application
 4) Установка node.js
 5) Установка homebrew
 6) Установка git lab;
-4) Установка ноды Ethereum;
-5) 
+4) [Установка ноды Ethereum;](https://coin-lab.com/ethereum-glava-2-ustanovka-i-zapusk-nody/#gl21)  
+ [Command line Options](https://github.com/ethereum/go-ethereum/wiki/Command-Line-Options)
