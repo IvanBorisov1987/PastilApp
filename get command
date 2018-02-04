@@ -1,27 +1,186 @@
-/*запуск geth с параметрами /Users/ivanborisov/Desktop/geth --dev --rpc --rpcaddr "0.0.0.0" --rpcapi "admin,debug,miner,shh,txpool,personal,eth,net,web3" console
+запуск geth с параметрами geth --dev --rpc --rpcaddr "0.0.0.0" --rpcapi "admin,debug,miner,shh,txpool,personal,eth,net,web3" console
 
 instance: Geth/v1.7.1-stable-05101641/darwin-amd64/go1.9
 
-coinbase: 0x5098b211859c944e42baa3c6084ffbe3758f1cc2
-
-at block: 0 (Thu, 01 Jan 1970 03:00:00 MSK)
-
-datadir: /var/folders/jj/h0j9kfbj2lx70kjt5yy_fl8m0000gn/T/ethereum_dev_mode
-
 modules: admin:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 shh:1.0 txpool:1.0 web3:1.0
 
+Geth console
 > personal.newAccount("0000") - создание нового аккаунта
-"0xb0adf1b153702c73a923e8528de214c9795c1d15"
-
 > eth.accounts - показать все аккаунты на компьютере
-["0x5098b211859c944e42baa3c6084ffbe3758f1cc2", "0xb0adf1b153702c73a923e8528de214c9795c1d15"]
 
 > eth.coinbase   - показать основной кошелек
-"0x5098b211859c944e42baa3c6084ffbe3758f1cc2"
 
 > eth.getBalance(eth.coinbase) - показать баланс основного кошелька
-0
 
 > miner.start()    запуск майнинга
 miner.stop()  остановка майнера
-*/
+
+$ Geth help
+   Geth - интерфейс командной строки go-ethereum
+   
+ПРИМЕНЕНИЕ (USAGE):
+
+   geth [опции] КОМАНДЫ  [параметры команды] [аргументы ...]
+   geth [options] command [command options] [arguments...]
+
+
+КОМАНДЫ (COMMANDS):
+
+   init   Bootstrap и инициализировать новый генезис блок (Bootstrap and initialize a new genesis block)
+
+   import   Импортировать блокчейн-файл (Import a blockchain file)
+
+   export   Экспорт блокчейн в файл (Export blockchain into file)
+
+   upgradedb      Обновление базы данных блоков (блокчейна) (Upgrade chainblock database)
+
+   removedb      Удалить блокчейн- и статичную базу данных (Remove blockchain and state databases)
+
+   dump          Дамп определенного блока из хранилища (Dump a specific block from storage)
+
+   monitor       Мониторинг и визуализация метрики ноды (Monitor and visualize node metrics)
+
+   account      Управление учетными записями/аккаунтами (Manage accounts)
+
+   wallet        Управление кошельками Эфириума (Manage Ethereum presale wallets)
+
+   console   Эта опция запускает консоль разработчика. Она поддерживает самый обычный JS и ряд встроенных функций для работы с Ethereum, вот простой пример  (пункт — Поднимаем ноду) (Start an interactive JavaScript environment). 
+
+   attach      подключиться к Узлу (Ноде) из консоли JavaScript (Start an interactive JavaScript environment (connect to node)
+
+   js Выполнить указанные файлы JavaScript (Execute the specified JavaScript files)
+
+   makedag Создать ethash DAG (для тестирования) (Generate ethash DAG (for testing))
+
+   version     Номер версии (Print version numbers)
+
+   license       Отобразить информацию о лицензии (Display license information)
+
+   help, h Показывает список команд или помощь для определенной команды (Shows a list of commands or help for one command)
+
+ВАРИАНТЫ ETHEREUM (ETHEREUM OPTIONS):
+
+  --datadir "/home/tron/.ethereum" Каталог расположения баз данных и ключей (Data directory for the databases and keystore)
+
+  --keystore Каталог расположения ключей (по умолчанию = внутри datadir) (Directory for the keystore (default = inside the datadir))
+
+  --networkid value Сетевой идентификатор. Целое число, 0 = Olympic (отключен), 1 = Frontier, 2 = Morden (отключен), 3 = Ropsten. По умолчанию: 1.  (Network identifier (integer, 0=Olympic (disused), 1=Frontier, 2=Morden (disused), 3=Ropsten) (default: 1)
+
+  --olympic Олимпик сеть: предварительно сконфигурированная тестовая сеть (Olympic network: pre-configured pre-release test network)
+
+  --testnet Ропстен сеть: предварительно сконфигурированная тестовая сеть (Ropsten network: pre-configured test network)
+
+  --dev Режим разработчика: предварительно настроенная частная сеть с несколькими флагами отладки. Запускает geth в режиме приватного блокчейна, то есть не синхронизирет основную / тестовую ветку. Вместо этого вы получаете стерильную цепочку без единого блока. Это самый удобный вариант в плане разработки, так как, например, майнинг блока занимает несколько секунд и нет никакой нагрузки на сеть или диск. (Developer mode: pre-configured private network with several debugging flags)
+
+  --identity value Собственное имя Узла/Ноды (Custom node name)
+
+  --fast Включить быструю синхронизацию (Enable fast syncing through state downloads)
+
+  --light Включить режим легкого клиента (Enable light client mode)
+
+  --lightserv value Максимальный процент времени, разрешенного для обслуживания LES-запросов  от 0 до 90. По умолчанию: 0 (Maximum percentage of time allowed for serving LES requests (0-90) (default: 0)
+
+  --lightpeers value Максимальное количество пиров LES-клиентов,  по умолчанию: 20. (Maximum number of LES client peers (default: 20)
+
+  --lightkdf Сокращение использования оперативной памяти и процессора при извлечении ключей при некотором расходе KDF (Reduce key-derivation RAM & CPU usage at some expense of KDF strength)
+
+ЭКСПЛУАТАЦИОННЫЕ НАСТРОЙКИ (PERFORMANCE TUNING OPTIONS):
+
+  --cache value Размер кэша, выделяемых для внутреннего кэширования, в мегабайтах, минимум - 16Mb на базу, по умолчанию: 128. (Megabytes of memory allocated to internal caching (min 16MB / database forced) (default: 128)
+
+  --trie-cache-gens value Количество узлов (поколений Нод) для хранения в памяти. По умолчанию: 120. (Number of trie node generations to keep in memory (default: 120)
+
+НАСТРОЙКИ АККАУНТА (ACCOUNT OPTIONS):
+
+  --unlock value Список аккаунтов для разблокировки (через запятую) (Comma separated list of accounts to unlock)
+
+  --password value Файл с паролем для деактивации ввода пароля (Password file to use for non-inteactive password input)
+
+API И ОПЦИИ КОНСОЛИ  (API AND CONSOLE OPTIONS):
+
+  --rpc Включает RPC-HTTP сервер. По сути это API к вашей ноде — через него сторонние приложения, вроде кошельков или IDE, смогут работать с блокчейном: загружать контракты, отправлять транзакции и так далее. По дефолту запускается на localhost:8545, можно изменить эти параметры с помощью --rpcaddr и --rpcport соответственно. (Enable the HTTP-RPC server)
+
+  --rpcaddr value Интерфейс прослушивания сервера HTTP-RPC, по умолчанию - localhost - устанавливает что-то вроде прав доступа для приложений, подключенных к RPC серверу. Например, если вы не укажете "miner", то, подключив к ноде кошелек и запустив майнер, вы получите ошибку. В примере я указал все возможные права, подробнее можете почитать здесь. (HTTP-RPC server listening interface (default: "localhost")
+
+  --ws Включает WS-RPC сервер (Enable the WS-RPC server)
+
+  --wsaddr value Сервер WS-RPC, по умолчанию localhost (WS-RPC server listening interface (default: "localhost")
+
+  --wsport value значение порта для сервера WS-RPC, по умолчанию: 8546 (WS-RPC server listening port (default: 8546)
+
+  --wsapi value API-интерфейс wsapi, для сервера WS-RPC, по умолчанию: «eth, net, web3» (API's offered over the WS-RPC interface (default: "eth,net,web3")
+
+  --wsorigins value Протокол, домен и порт вебсокета откуда отправлен запрос (Origins from which to accept websockets requests)
+
+  --ipcdisable Отключает сервер IPC-RPC (Disable the IPC-RPC server)
+
+  --ipcapi value API-интерфейсы, предлагаемые через интерфейс IPC-RPC. По умолчанию: «admin, debug, eth, miner, net, personal, shh, txpool, web3» (APIs offered over the IPC-RPC interface (default: "admin,debug,eth,miner,net,personal,shh,txpool,web3") 
+
+  --ipcpath "geth.ipc" Имя файла для IPC сокета/pipe внутри datadir, явные пути выходят из него. (Filename for IPC socket/pipe within the datadir (explicit paths escape it)  
+
+  --rpccorsdomain value Список доменов, через запятую, из которых можно принимать запросы в браузере. (Comma separated list of domains from which to accept cross origin requests (browser enforced)  
+  --jspath loadScript Корневой путь JavaScript для loadScript. По умолчанию: "." (JavaScript root path for loadScript (default: ".")
+  --exec value Выполнить код JavaScript (только в сочетании с консолью) (Execute JavaScript statement (only in combination with console/attach) 
+  --preload value Список файлов JavaScript, через запятую, для предварительной загрузки в консоль. (Comma separated list of JavaScript files to preload into the console)
+
+СЕТЕВЫЕ ОПЦИИ (NETWORKING OPTIONS):
+
+  --bootnodes value. УРЛ'Ы  для загрузки P2P, через запятую (Comma separated enode URLs for P2P discovery bootstrap)
+  --port value Сетевой порт прослушивания, по умолчанию: 30303 (Network listening port (default: 30303)
+  --maxpeers value Максимальное количество пиров. Сеть отключена, если установлено значение 0. Значение  по умолчанию - 25. (Maximum number of network peers (network disabled if set to 0) (default: 25))
+  --maxpendpeers value Максимальное число ожидающих попыток подключения. По умолчанию используется значение 0. (Maximum number of pending connection attempts (defaults used if set to 0)
+  --nat value Механизм отображения NAT-порта: any | none | upnp | pmp | extip: . По умолчанию: any (любой). (NAT port mapping mechanism (any|none|upnp|pmp|extip:ny
+  --nodiscover Отключает механизм обнаружения пиров. Переход на ручное добавление пиров. (Disables the peer discovery mechanism (manual peer addition)
+  --v5disc Включает экспериментальный механизм RLPx V5 (Topic Discovery) (Enables the experimental RLPx V5 (Topic Discovery) mechanism)
+  --nodekey value файл с ключами узла P2P (P2P node key file)
+  --nodekeyhex value hex-ключ P2P узла, для тестирования (P2P node key as hex (for testing)
+
+ОПЦИИ МАЙНИНГА (MINER OPTIONS) :
+
+  --mine Включает режим майнига (Enable mining)
+   --minerthreads value Количество потоков ЦП, используемых для майнига, по умолчанию: 8 (Number of CPU threads to use for mining (default: 8)
+   --autodag Включает автоматическую предварительную генерацию DAG (Enable automatic DAG pregeneration)
+   --etherbase value. Публичный адрес для вознаграждений за блокировку блоков. По умолчанию - первая созданная учетная запись, или - 0. (Public address for block mining rewards (default = first account created) (default: "0")
+   -targetgaslimit value Устанавливает лимит Газа для блока при майнинге. По умолчанию: 4712388. (Target gas limit sets the artificial target gas floor for the blocks to mine (default: "4712388")
+   --gasprice value Устанавливает минимальную стоимость Газа, которую можно принять для добычи транзакций. По умолчанию: 20000000000. (Minimal gas price to accept for mining a transactions (default: "20000000000")
+   --extradata value Блокировать дополнительные данные, установленные майнером. По умолчанию = версия клиента. (Block extra data set by the miner (default = client version)
+
+ОПЦИИ ЦЕНООБРЕЗОВАНИЯ ГАЗА  (GAS PRICE ORACLE OPTIONS):
+  --gpomin value Устанавливает минимальную стоимость газа. По умолчанию: 20000000000. (Minimum suggested gas price (default: "20000000000")
+  --gpomax value   Устанавливает максимальную стоимость газа. По умолчанию: 500000000000. (Maximum suggested gas price (default: "500000000000")
+  --gpofull value Полный порог блока для расчета цены Газа (%). По умолчанию: 80 (Full block threshold for gas price calculation (%) (default: 80)
+  --gpobasedown value Предлагаемый коэффициент снижения стоимости Газа (1/1000) (по умолчанию: 10). (Suggested gas price base step down ratio (1/1000) (default: 10)
+  --gpobaseup value Предлагаемый коэффициент повышения стоимости Газа (1/1000) (по умолчанию: 100). (Suggested gas price base step up ratio (1/1000) (default: 100)
+  --gpobasecf value Рекомендуемый коэффициент коррекции цен на газ (%) (по умолчанию: 110). Suggested gas price base correction factor (%) (default: 110)
+
+ОПЦИИ ВИРУТАЛЬНОЙ МАШИНЫ (VIRTUAL MACHINE OPTION):
+  --jitvm Включает JIT VM (Enable the JIT VM)
+  --forcejit Принудительное использование JIT VM (Force the JIT VM to take precedence)
+  --jitcache value Количество кэшированных программ JIT VM. По умолчанию: 64. (Amount of cached JIT VM programs (default: 64)
+
+ОПЦИИ ОТЛАДКИ И ЛОГОВ (LOGGING AND DEBUGGING OPTIONS):
+
+  --ethstats value URL-адрес отчета службы ethstats (nodename:secret@host:port) (Reporting URL of a ethstats service (nodename:secret@host:port))
+  --metrics Включает сбор  и репорт отчетности/логов   (Enable metrics collection and reporting)
+  --fakepow Отключает верификацию proof-of-work (Disables proof-of-work verification)
+  --verbosity value  Условия логгирования: 0=тихий, 1=ошибки, 2=предупреждения, 3=информация, 4=ядро, 5=отладка, 6=детальный. По умолчанию: 3. (Logging verbosity: 0=silent, 1=error, 2=warn, 3=info, 4=core, 5=debug, 6=detail (default: 3)
+  --vmodule value Per-module verbosity: через запятую =, например, eth/*=6,p2p=5. (Per-module verbosity: comma-separated list of = (e.g. eth/*=6,p2p=5)
+  --backtrace value Запросить трассировку стека в конкретном протоколировании (например, "block.go: 271"). По умолчанию: 0. (Request a stack trace at a specific logging statement (e.g. "block.go:271") (default: :0)
+  --pprof Включает HTTP-сервер pprof (Enable the pprof HTTP server)
+  --pprofaddr value Интерфейс pprof HTTP-сервера, по умолчанию: 127.0.0.1. (pprof HTTP server listening interface (default: "127.0.0.1")
+  --pprofport value Порт pprof HTTP-сервера, по умолчанию: 6060 (pprof HTTP server listening port (default: 6060)
+  --memprofilerate value Значение для памяти, по умолчанию: 524288.  (Turn on memory profiling with the given rate (default: 524288)
+  --blockprofilerate value Значение для блока. По умолчанию: 0. (Turn on block profiling with the given rate (default: 0)
+  --cpuprofile value Записать значение процессора в файл (Write CPU profile to the given file)
+  --trace value Запись трассировки выполнения в файл (Write execution trace to the given file)
+
+ЭКСПЕРИМЕНТАЛЬНЫЕ ОПЦИИ (EXPERIMENTAL OPTIONS):
+
+  --shh Включает Whisper (Enable Whisper)
+  --ntspec Включает уведомления NatSpec (Enable NatSpec confirmation notice)
+
+ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ (MISCELLANEOUS OPTIONS):
+
+  --solc value Использовать команды компилятора Solidity. По умолчанию: «solc» (Solidity compiler command to be used (default: "solc"))
+  --netrestrict value Ограничивает  связь с определенными IP-сетями (маски CIDR) (Restricts network communication to the given IP networks (CIDR masks)
+  --help, -h показать справку (show help)
