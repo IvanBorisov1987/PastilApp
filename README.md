@@ -8,4 +8,6 @@ My Decentralized Application
 4) Установка node.js
 5) Установка homebrew
 6) Установка git lab;
-4) [Установка ноды Ethereum;](https://coin-lab.com/ethereum-glava-2-ustanovka-i-zapusk-nody/#gl21) [Command line Options](https://github.com/ethereum/go-ethereum/wiki/Command-Line-Options)
+7) [Установка ноды Ethereum;](https://coin-lab.com/ethereum-glava-2-ustanovka-i-zapusk-nody/#gl21) [Command line Options](https://github.com/ethereum/go-ethereum/wiki/Command-Line-Options)
+8) удаление Geth и установка parity(если нет SSD)
+9) [Установка full node bitcoin](https://bitcoin.org/en/full-node#ubuntu-1610)
