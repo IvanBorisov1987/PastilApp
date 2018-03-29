@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.18;
 
 //import "https://github.com/OpenZeppelin/zeppelin-solidity/contracts/lifecycle/Pausable.sol";
 
@@ -280,13 +280,12 @@ contract StandardToken is ERC20, BasicToken {
 
 }
 
-contract ZVToken is Ownable, BurnableToken, StandardToken {
+contract SimpleToken is Ownable, BurnableToken, StandardToken {
 
     using SafeMath for uint;
 
-    string public name = "Zovet vsex tuman";
-    string public symbol = "ZVToken";
-    uint public constant initialSupply = 100000000;
+    string public name;
+    string public symbol;
     uint256 public constant decimals = 18;
     uint256 dec = 10**decimals;
 
@@ -299,11 +298,17 @@ contract ZVToken is Ownable, BurnableToken, StandardToken {
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Burn(address indexed from, uint256 value);
 
-    function ZVToken() public
+    function SimpleToken(
+        uint256 initialSupply,
+        string tokenName,
+        string tokenSymbol
+    ) public
     {
         totalSupply = initialSupply*1e18;
         balanceOf[this] = totalSupply;
         avaliableSupply = balanceOf[this];
+        name = tokenName;
+        symbol = tokenSymbol;
         owner = msg.sender;
     }
 
