@@ -1,4 +1,10 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.21;
+
+/**
+* github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/crowdsale/validation/WhitelistedCrowdsale.sol
+*
+*/
+
 import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 import "zeppelin-solidity/contracts/math/SafeMath.sol";
 
