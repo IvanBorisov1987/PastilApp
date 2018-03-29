@@ -299,7 +299,7 @@ contract ZVToken is Ownable, BurnableToken, StandardToken {
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Burn(address indexed from, uint256 value);
 
-    function SimpleToken() public
+    function ZVToken() public
     {
         totalSupply = initialSupply*1e18;
         balanceOf[this] = totalSupply;
