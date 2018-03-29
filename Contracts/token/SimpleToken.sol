@@ -288,7 +288,7 @@ contract SimpleToken is Ownable, BurnableToken, StandardToken {
     string public symbol = "STC2";
     uint public constant initialSupply = 10000000;
     uint256 public constant decimals = 18;
-    //uint256 dec = 10**decimals;
+    uint256 dec = 10**decimals;
 
     address public owner;
     uint256 public totalSupply;
