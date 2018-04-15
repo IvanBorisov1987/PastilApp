@@ -166,15 +166,18 @@ contract BurnableToken is BasicToken, Ownable {
     event Burn(address indexed burner, uint256 value);
 
     function burn(uint256 _value) onlyOwner public {
-        require(_value <= balances[msg.sender]);
+        _burn(msg.sender, _value);
+    }
 
-        address burner = msg.sender;
-        balances[burner] = balances[burner].sub(_value);
+    function _burn(address _who, uint256 _value) internal {
+        require(_value <= balances[_who]);
+        balances[_who] = balances[_who].sub(_value);
         totalSupply_ = totalSupply_.sub(_value);
-        emit Burn(burner, _value);
-        emit Transfer(burner, address(0), _value);
+        emit Burn(_who, _value);
+        emit Transfer(_who, address(0), _value);
     }
 }
+
 contract MintableToken is StandardToken, Ownable {
     event Mint(address indexed to, uint256 amount);
     event MintFinished();
@@ -205,15 +208,34 @@ contract SimpleToken is MintableToken, BurnableToken, Pausable {
 
     using SafeMath for uint256;
 
-    string constant public name = "SimpleToken";
-    string constant public symbol = "ST";
+    string  public name = "SimpleToken";
+    string  public symbol = "ST";
     uint256 constant public decimals = 18;
-    uint256 constant public initialSupply = 100e6 * (10 ** decimals);
+    uint256 constant dec = 10**decimals;
+    uint256 public initialSupply = 100000000*dec;
+    uint256 public availableSupply;
+    mapping (address => bool) public crowdsaleAddress;
+    event CreateSale(address crowdsale, uint256 time);
 
-    function SimpleToken() public {
+    function SimpleToken( ) public {
         totalSupply_ = totalSupply_.add(initialSupply);
-        balances[msg.sender] = balances[msg.sender].add(initialSupply);
-        emit Transfer(address(0x0), msg.sender, initialSupply);
+        balances[this] = balances[this].add(initialSupply);
+        availableSupply = totalSupply_;
+        emit Transfer(address(0x0), this, initialSupply);
+    }
+
+    function pushCrowdsaleContract(address _crowdsaleAddress) public onlyOwner {
+        require(_crowdsaleAddress != address(0x0));
+        crowdsaleAddress[_crowdsaleAddress] = true;
+        allowed[this][_crowdsaleAddress] = totalSupply_;
+        emit CreateSale(_crowdsaleAddress, now);
+    }
+
+    function transferForCrowdsale (address _crowdsaleAddress, uint256 _value) public {
+        require(crowdsaleAddress[_crowdsaleAddress]);
+        require(_value <= balances[this]);
+        balances[this] = balances[this].sub(_value);
+        balances[_crowdsaleAddress] = balances[_crowdsaleAddress].add(_value);
     }
 
     function transfer(address _to, uint256 _value) public whenNotPaused returns (bool) {
