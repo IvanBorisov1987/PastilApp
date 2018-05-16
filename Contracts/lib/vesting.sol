@@ -75,11 +75,11 @@ contract TokenVesting is Ownable {
     mapping (address => bool) public revoked; // анулированные токены
 
     constructor(
-        address _beneficiary,
-        uint256 _start,
-        uint256 _cliff,
-        uint256 _duration,
-        bool _revocable // отзывной ли токен
+        address _beneficiary, // получатель
+        uint256 _start, // дата начала периода
+        uint256 _cliff, // период заморозки
+        uint256 _duration, // общая продожительность всего цикла(заморозка + время расределения)
+        bool _revocable // отзывной ли токен(можно ли анулировать)
     )
     public
     {
@@ -91,7 +91,7 @@ contract TokenVesting is Ownable {
         cliff = _start.add(_cliff);
         start = _start;
     }
-    //Отправка vested токенов бенефициару
+    //Отправка vested токенов бенефициару - высвобожденная сумма считается в vestedAmount
     function release(ERC20 token) public {
         uint256 unreleased = releasableAmount(token); // в качестве параметра передается тоткен, который отправляем
         require(unreleased > 0); // проверка что токенов больше 0
