@@ -1,130 +1,86 @@
+// 0xC032D3fCA001b73e8cC3be0B75772329395caA49, 1526461102, 600, 1200, true
 pragma solidity ^0.4.23;
 
-//import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol";
-//import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-/**
- * @title SafeMath
- * @dev https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/math/SafeMath.sol
- */
-library SafeMath {
-
-    function mul(uint256 a, uint256 b) internal pure returns (uint256 c) {
-        if (a == 0) {
-            return 0;
-        }
-        c = a * b;
-        assert(c / a == b);
-        return c;
-    }
-
-    function div(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a / b;
-    }
-
-    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-        assert(b <= a);
-        return a - b;
-    }
-
-    function add(uint256 a, uint256 b) internal pure returns (uint256 c) {
-        c = a + b;
-        assert(c >= a);
-        return c;
-    }
-}
-
-interface ERC20 {
-    function transfer (address _beneficiary, uint256 _tokenAmount) external returns (bool);
-    function balanceOf(address who) external returns(uint256);
-}
-/**
- * @title Ownable
- * @dev https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/ownership/Ownable.sol
- */
-contract Ownable {
-    address public owner;
-
-    constructor() public {
-        owner = msg.sender;
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == owner);
-        _;
-    }
-}
-
-// 0x81cfe8efdb6c7b7218ddd5f6bda3aa4cd1554fd2, 1526337955, 43200, 86400, true
 contract TokenVesting is Ownable {
+
     using SafeMath for uint256;
-    //using SafeERC20 for ERC20;
+    using SafeERC20 for ERC20Basic;
 
     event Released(uint256 amount);
     event Revoked();
-    // получатель токена после выпуска
-    address public beneficiary; // адрес выгодоприобритателя токена
 
-    uint256 public cliff; // период холда после которого начнеться распространение в unix timestamp
-    uint256 public start; // старт
-    uint256 public duration; //продолжительность действия
+    address public beneficiary;
+    uint256 public cliff;
+    uint256 public start;
+    uint256 public duration;
+    uint256 public tokensAmount;
 
     bool public revocable;
 
-    mapping (address => uint256) public released; // высвобожденные токены на адресе
-    mapping (address => bool) public revoked; // анулированные токены
+    mapping (address => uint256) public released;
+    mapping (address => bool) public revoked;
 
     constructor(
-        address _beneficiary, // получатель
-        uint256 _start, // дата начала периода
-        uint256 _cliff, // период заморозки
-        uint256 _duration, // общая продожительность всего цикла(заморозка + время расределения)
-        bool _revocable // отзывной ли токен(можно ли анулировать)
+        address _beneficiary,
+        uint256 _start,
+        uint256 _cliff,
+        uint256 _duration,
+        bool _revocable,
+        uint256 _tokensAmount
     )
     public
     {
         require(_beneficiary != address(0));
         require(_cliff <= _duration);
+
         beneficiary = _beneficiary;
         revocable = _revocable;
         duration = _duration;
         cliff = _start.add(_cliff);
         start = _start;
+        tokensAmount = _tokensAmount;
     }
-    //Отправка vested токенов бенефициару - высвобожденная сумма считается в vestedAmount
-    function release(ERC20 token) public {
-        uint256 unreleased = releasableAmount(token); // в качестве параметра передается тоткен, который отправляем
-        require(unreleased > 0); // проверка что токенов больше 0
-        released[token] = released[token].add(unreleased); // добавлеие в мепинг высвобожденных токенов
-        token.transfer(beneficiary, unreleased); // безопастный трансфер
-        emit Released(unreleased); // событие
+
+    /* @notice отправка vested tokens бенефициару*/
+    function release(ERC20Basic token) public {
+        uint256 unreleased = releasableAmount(token);
+        require(unreleased > 0);
+        released[token] = released[token].add(unreleased);
+        token.safeTransfer(beneficiary, unreleased);
+        emit Released(unreleased);
     }
-    /* Позволяет владельцу СК отозвать наделение. Токены, уже принадлежащие остаются в договоре, остальные возвращаются владельцу СК.*/
-    function revoke(ERC20 token) public onlyOwner { // анулирование адреса токена
-        require(revocable); // проверка что токен отзывной
-        require(!revoked[token]); // проверка что он не блы анулирован ранее
+
+    function revoke(ERC20Basic token) public onlyOwner {
+        require(revocable);
+        require(!revoked[token]);
         uint256 balance = token.balanceOf(this);
         uint256 unreleased = releasableAmount(token);
         uint256 refund = balance.sub(unreleased);
         revoked[token] = true;
-        token.transfer(owner, refund);
+        token.safeTransfer(owner, refund);
         emit Revoked();
     }
-    /* Вычисляет сумму, которая уже присвоена, но еще не выпущена*/
-    function releasableAmount(ERC20 token) public returns (uint256) {
+    /* @dev Вычисляет сумму, которая уже vested но еще не высобожден.*/
+    function releasableAmount(ERC20Basic token) public view returns (uint256) {
         return vestedAmount(token).sub(released[token]);
     }
-    /*  Вычисляет сумму, которая уже присвоена. */
-    function vestedAmount(ERC20 token) public returns (uint256) {
-        uint256 currentBalance = token.balanceOf(this);
-        uint256 totalBalance = currentBalance.add(released[token]);
+
+    /* @dev Вычисляет сумму, которая уже vested.*/
+    function vestedAmount(ERC20Basic token) public view returns (uint256) {
+        uint256 currentBalance = token.balanceOf(this); // общий баланс токенов на данном счете
+        uint256 totalBalance = currentBalance.add(released[token]); //общий баланс +
 
         if (block.timestamp < cliff) {
-            return 0;
+            return 0; // ничего если еще не прошел холд
         } else if (block.timestamp >= start.add(duration) || revoked[token]) {
-            return totalBalance;
+            return totalBalance; //возврат всех средств если дюрация прошла
         } else {
-            return totalBalance.mul(block.timestamp.sub(start)).div(duration);
+            return totalBalance.mul(block.timestamp.sub(start)).div(duration); // возврт пропорции = общий баланс*(now - star) / продолжительность
         }
     }
 }
