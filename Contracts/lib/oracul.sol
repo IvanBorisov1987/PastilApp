@@ -1,10 +1,11 @@
 pragma solidity ^0.4.21;
 /**
-* Контракт запрашивает цену ETH к USD каждые 60 секунд
+* @title Oraclize
+* @dev  Контракт запрашивает цену ETH к USD каждые 60 секунд
 */
 import "https://github.com/oraclize/ethereum-api/oraclizeAPI_0.5.sol";
 
-contract oracul is usingOraclize {
+contract Oracul is usingOraclize {
 
     uint256 public usdToEther;
     uint256 public etherBuyPrice;
