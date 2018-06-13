@@ -1,40 +1,54 @@
 pragma solidity ^0.4.24;
 
-contract Random {
-	uint public max_ticket_number;
-	uint public shift_block;
-	uint public winner_number;
+/**
+ * @title Класс для создания случайного целого числа для Solidity
+ * @dev Оригинал - https://github.com/PillarDevelopment/PillarLab/blob/master/Contracts/lib/RandomNumber.sol
+ */
+
+contract RandomInteger {
+	uint public max_numbers; // максимальное количество случайных чисел от 0 до
+	uint public shift_block; // сдвиг
+	uint public random_number; // случайное число
+	
 	
 	constructor() public {
-		max_ticket_number = 100;
+		max_numbers = 100;
 		shift_block = 1;
 	}
 	
-	function setMaxTicketNumber(uint new_max_ticket_number) public {
-		max_ticket_number = new_max_ticket_number;
+	// Изменяет максимальное количество случайных вариантов
+	function setMaxTicketNumber(uint new_max_number) public {
+		max_numbers = new_max_number;
 	}
 	
-	function getWinnerNumber() public {
+	// создает случайное число
+	function getRandomNumber() public {
 		uint base_random = uint(blockhash(block.number - shift_block));
 		//shift_block++;
-		winner_number = base_random%max_ticket_number;
+		random_number = base_random%max_numbers;
 	}
 	
-	
-	function printWinnerNumber() public view returns (uint) {
-		return winner_number;
+	// Показать рандомное число
+	function printRandomNumber() public view returns (uint) {
+		return random_number;
 	}
 	
-	
+	// Показать сдвиг
 	function getShift() public constant returns (uint) {
 		return shift_block;
 	}
 	
+	// Изменить сдвиг
+	function setShift(uint256 newShift) public {
+		shift_block = newShift;
+	}
 	
+	// оказать номер блока
 	function getBlockNumber() public view returns (uint) {
 		return block.number;
 	}
 	
+	// Показать хеш блока
 	function getBlockhash() public view returns (uint) {
 		return uint(blockhash(block.number - shift_block));
 	}
