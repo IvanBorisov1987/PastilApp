@@ -1,17 +1,13 @@
 pragma solidity ^0.4.24;
-
 /**
  * @title SafeMath
  * @dev Math operations with safety checks that throw on error
  */
 library SafeMath {
-	
 	/**
 	* @dev Multiplies two numbers, throws on overflow.
 	*/
 	function mul(uint256 a, uint256 b) internal pure returns (uint256 c) {
-		// Gas optimization: this is cheaper than asserting 'a' not being zero, but the
-		// benefit is lost if 'b' is also tested.
 		// See: https://github.com/OpenZeppelin/openzeppelin-solidity/pull/522
 		if (a == 0) {
 			return 0;
@@ -21,17 +17,12 @@ library SafeMath {
 		assert(c / a == b);
 		return c;
 	}
-	
 	/**
 	* @dev Integer division of two numbers, truncating the quotient.
 	*/
 	function div(uint256 a, uint256 b) internal pure returns (uint256) {
-		// assert(b > 0); // Solidity automatically throws when dividing by 0
-		// uint256 c = a / b;
-		// assert(a == b * c + a % b); // There is no case in which this doesn't hold
 		return a / b;
 	}
-	
 	/**
 	* @dev Subtracts two numbers, throws on overflow (i.e. if subtrahend is greater than minuend).
 	*/
@@ -52,29 +43,27 @@ library SafeMath {
 
 /**
  * Utility library of inline functions on addresses
+ * Служебная библиотека встроенных функций по адресам
  */
 library AddressUtils {
-	
 	/**
-	 * Returns whether the target address is a contract
-	 * @dev This function will return false if invoked during the constructor of a contract,
-	 * as the code is not actually created until after the constructor finishes.
-	 * @param addr address to check
-	 * @return whether the target address is a contract
+	 * Возвращает, является ли целевой адрес контрактом
+	 * @dev Эта функция возвращает false, если она вызывается во время конструктора контракта,
+	 * поскольку код фактически не создается до тех пор, пока конструктор не завершится.
+	 * @param addr адрес для проверки
+	 * @return является ли целевой адрес контрактом
 	 */
 	function isContract(address addr) internal view returns (bool) {
 		uint256 size;
-		// XXX Currently there is no better way to check if there is a contract in an address
-		// than to check the size of the code at that address.
-		// See https://ethereum.stackexchange.com/a/14016/36603
-		// for more details about how this works.
-		// TODO Check this again before the Serenity release, because all addresses will be
-		// contracts then.
+		// XXX В настоящее время нет лучшего способа проверить, есть ли контракт в адресе
+		// чем проверить Размер кода по этому адресу.
+		// Смотри https://ethereum.stackexchange.com/a/14016/36603
+		// для больших деталей по этому поводу
+		// TODO Проверьте это еще раз перед релизом Serenity, потому что тогда все адреса будут контрактами.
 		// solium-disable-next-line security/no-inline-assembly
 		assembly { size := extcodesize(addr) }
 		return size > 0;
 	}
-	
 }
 
 /**
@@ -82,21 +71,16 @@ library AddressUtils {
  * @dev https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md
  */
 interface ERC165 {
-	
 	/**
 	 * @notice Query if a contract implements an interface
 	 * @param _interfaceId The interface identifier, as specified in ERC-165
-	 * @dev Interface identification is specified in ERC-165. This function
-	 * uses less than 30,000 gas.
+	 * @dev идентификация интерфейса указана в ERC-165. Эта функция использует меньше чем 30.000 газов.
 	 */
-	function supportsInterface(bytes4 _interfaceId)
-	external
-	view
-	returns (bool);
+	function supportsInterface(bytes4 _interfaceId)	external view returns (bool);
 }
 
 /**
- * @title SupportsInterfaceWithLookup
+ * @title Поддерживает Интерфейс С Поиском
  * @author Matt Condon (@shrugs)
  * @dev Implements ERC165 using a lookup table.
  */
@@ -116,28 +100,20 @@ contract SupportsInterfaceWithLookup is ERC165 {
 	 * @dev A contract implementing SupportsInterfaceWithLookup
 	 * implement ERC165 itself
 	 */
-	constructor()
-	public
-	{
+	constructor() public {
 		_registerInterface(InterfaceId_ERC165);
 	}
-	
 	/**
 	 * @dev implement supportsInterface(bytes4) using a lookup table
 	 */
-	function supportsInterface(bytes4 _interfaceId)
-	external
-	view
-	returns (bool)
+	function supportsInterface(bytes4 _interfaceId) external view returns (bool)
 	{
 		return supportedInterfaces[_interfaceId];
 	}
-	
 	/**
 	 * @dev private method for registering an interface
 	 */
-	function _registerInterface(bytes4 _interfaceId)
-	internal
+	function _registerInterface(bytes4 _interfaceId) internal
 	{
 		require(_interfaceId != 0xffffffff);
 		supportedInterfaces[_interfaceId] = true;
@@ -145,7 +121,7 @@ contract SupportsInterfaceWithLookup is ERC165 {
 }
 
 /**
- * @title ERC721 Non-Fungible Token Standard basic interface
+ * @title ERC721 Стандартный базовый интерфейс, не Заменяемый Токеном
  * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
 contract ERC721Basic is ERC165 {
@@ -186,10 +162,8 @@ contract ERC721Basic is ERC165 {
 		address _to,
 		uint256 _tokenId,
 		bytes _data
-	)
-	public;
+	)	public;
 }
-
 
 /**
  * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
@@ -254,9 +228,7 @@ contract ERC721Receiver {
 		address _from,
 		uint256 _tokenId,
 		bytes _data
-	)
-	public
-	returns(bytes4);
+	) public returns(bytes4);
 }
 
 /**
@@ -265,7 +237,7 @@ contract ERC721Receiver {
  */
 contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	
-	bytes4 private constant InterfaceId_ERC721 = 0x80ac58cd;
+	bytes4 public constant InterfaceId_ERC721 = 0x80ac58cd;
 	/*
 	 * 0x80ac58cd ===
 	 *   bytes4(keccak256('balanceOf(address)')) ^
@@ -279,7 +251,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	 *   bytes4(keccak256('safeTransferFrom(address,address,uint256,bytes)'))
 	 */
 	
-	bytes4 private constant InterfaceId_ERC721Exists = 0x4f558e79;
+	bytes4 public constant InterfaceId_ERC721Exists = 0x4f558e79; // по умолчанию был private
 	/*
 	 * 0x4f558e79 ===
 	 *   bytes4(keccak256('exists(uint256)'))
@@ -290,7 +262,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	
 	// Equals to `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`
 	// which can be also obtained as `ERC721Receiver(0).onERC721Received.selector`
-	bytes4 private constant ERC721_RECEIVED = 0xf0b9e5ba;
+	bytes4 public constant ERC721_RECEIVED = 0xf0b9e5ba;
 	
 	// Mapping from token ID to owner
 	mapping (uint256 => address) internal tokenOwner;
@@ -516,7 +488,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	 * @param _to The address that will own the minted token
 	 * @param _tokenId uint256 ID of the token to be minted by the msg.sender
 	 */
-	function _mint(address _to, uint256 _tokenId) internal {
+	function _mint(address _to, uint256 _tokenId) public { // по умолчанию функция Internal
 		require(_to != address(0));
 		addTokenTo(_to, _tokenId);
 		emit Transfer(address(0), _to, _tokenId);
@@ -768,7 +740,7 @@ contract ERC721Token is SupportsInterfaceWithLookup, ERC721BasicToken, ERC721 {
 	 * @param _to address the beneficiary that will own the minted token
 	 * @param _tokenId uint256 ID of the token to be minted by the msg.sender
 	 */
-	function _mint(address _to, uint256 _tokenId) internal {
+	function _mint(address _to, uint256 _tokenId) public { // по умолчанию функция internal
 		super._mint(_to, _tokenId);
 		
 		allTokensIndex[_tokenId] = allTokens.length;
