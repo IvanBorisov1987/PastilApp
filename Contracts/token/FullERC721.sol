@@ -361,20 +361,15 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	}
 	
 	/**
-	 * @dev Transfers the ownership of a given token ID to another address
-	 * Usage of this method is discouraged, use `safeTransferFrom` whenever possible
+	 * @dev Передача владельца данного идентификатора токена на другой адрес
+	 * использование этого метода не рекомендуется,
+	 * используйте "safeTransferFrom", когда это возможно
 	 * Requires the msg sender to be the owner, approved, or operator
 	 * @param _from current owner of the token
 	 * @param _to address to receive the ownership of the given token ID
 	 * @param _tokenId uint256 ID of the token to be transferred
 	*/
-	function transferFrom(
-		address _from,
-		address _to,
-		uint256 _tokenId
-	)
-	public canTransfer(_tokenId)
-	{
+	function transferFrom(address _from, address _to, uint256 _tokenId)	public canTransfer(_tokenId) {
 		require(_from != address(0));
 		require(_to != address(0));
 		
@@ -386,9 +381,9 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	}
 	
 	/**
-	 * @dev Safely transfers the ownership of a given token ID to another address
-	 * If the target address is a contract, it must implement `onERC721Received`,
-	 * which is called upon a safe transfer, and return the magic value
+	 * @dev Безопасно передает владение данным идентификатором токена
+	 * на другой адрес, если целевой адрес является контрактом, it must implement `onERC721Received`,
+	 * который вызывается на безопасную передачу и возвращает магическое значение
 	 * `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`; otherwise,
 	 * the transfer is reverted.
 	 *
@@ -397,13 +392,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	 * @param _to address to receive the ownership of the given token ID
 	 * @param _tokenId uint256 ID of the token to be transferred
 	*/
-	function safeTransferFrom(
-		address _from,
-		address _to,
-		uint256 _tokenId
-	)
-	public canTransfer(_tokenId)
-	{
+	function safeTransferFrom(address _from, address _to, uint256 _tokenId)	public canTransfer(_tokenId) {
 		// solium-disable-next-line arg-overflow
 		safeTransferFrom(_from, _to, _tokenId, "");
 	}
@@ -420,14 +409,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	 * @param _tokenId uint256 ID of the token to be transferred
 	 * @param _data bytes data to send along with a safe transfer check
 	 */
-	function safeTransferFrom(
-		address _from,
-		address _to,
-		uint256 _tokenId,
-		bytes _data
-	)
-	public canTransfer(_tokenId)
-	{
+	function safeTransferFrom( address _from, address _to, uint256 _tokenId, bytes _data)public canTransfer(_tokenId){
 		transferFrom(_from, _to, _tokenId);
 		// solium-disable-next-line arg-overflow
 		require(checkAndCallSafeTransfer(_from, _to, _tokenId, _data));
@@ -443,9 +425,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	function isApprovedOrOwner(
 		address _spender,
 		uint256 _tokenId
-	)
-	internal view returns (bool)
-	{
+	) internal view returns (bool) 	{
 		address owner = ownerOf(_tokenId);
 		// Disable solium check because of
 		// https://github.com/duaraghav8/Solium/issues/175
@@ -457,8 +437,8 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 		);
 	}
 	/**
-	 * @dev Internal function to mint a new token
-	 * Reverts if the given token ID already exists
+	 * @dev Внутренняя функция для монтирования нового токена возвращается,
+	 * если данный идентификатор токена уже существует
 	 * @param _to The address that will own the minted token
 	 * @param _tokenId uint256 ID of the token to be minted by the msg.sender
 	 */
@@ -529,10 +509,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 		address _to,
 		uint256 _tokenId,
 		bytes _data
-	)
-	internal
-	returns (bool)
-	{
+	)	internal returns (bool)	{
 		if (!_to.isContract()) {
 			return true;
 		}
