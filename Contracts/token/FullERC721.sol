@@ -5,27 +5,23 @@ pragma solidity ^0.4.24;
  */
 library SafeMath {
 	/**
-	* @dev Multiplies two numbers, throws on overflow.
-	*/
+	* @dev Multiplies two numbers, throws on overflow.	*/
 	function mul(uint256 a, uint256 b) internal pure returns (uint256 c) {
 		// See: https://github.com/OpenZeppelin/openzeppelin-solidity/pull/522
 		if (a == 0) {
 			return 0;
 		}
-		
 		c = a * b;
 		assert(c / a == b);
 		return c;
 	}
 	/**
-	* @dev Integer division of two numbers, truncating the quotient.
-	*/
+	* @dev Integer division of two numbers, truncating the quotient. */
 	function div(uint256 a, uint256 b) internal pure returns (uint256) {
 		return a / b;
 	}
 	/**
-	* @dev Subtracts two numbers, throws on overflow (i.e. if subtrahend is greater than minuend).
-	*/
+	* @dev Subtracts two numbers, throws on overflow (i.e. if subtrahend is greater than minuend). */
 	function sub(uint256 a, uint256 b) internal pure returns (uint256) {
 		assert(b <= a);
 		return a - b;
@@ -125,114 +121,96 @@ contract SupportsInterfaceWithLookup is ERC165 {
  * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
 contract ERC721Basic is ERC165 {
-	event Transfer(
-		address indexed _from,
-		address indexed _to,
-		uint256 indexed _tokenId
-	);
-	event Approval(
-		address indexed _owner,
-		address indexed _approved,
-		uint256 indexed _tokenId
-	);
-	event ApprovalForAll(
-		address indexed _owner,
-		address indexed _operator,
-		bool _approved
-	);
 	
-	function balanceOf(address _owner) public view returns (uint256 _balance);
-	function ownerOf(uint256 _tokenId) public view returns (address _owner);
-	function exists(uint256 _tokenId) public view returns (bool _exists);
+	event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
+	event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);
+	event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
 	
-	function approve(address _to, uint256 _tokenId) public;
-	function getApproved(uint256 _tokenId)
-	public view returns (address _operator);
+	function balanceOf(address _owner) public view returns (uint256 _balance); // стандартаная фукнция баланса
 	
-	function setApprovalForAll(address _operator, bool _approved) public;
-	function isApprovedForAll(address _owner, address _operator)
-	public view returns (bool);
+	function ownerOf(uint256 _tokenId) public view returns (address _owner); // возращает адрес держателя по ID  токена
 	
-	function transferFrom(address _from, address _to, uint256 _tokenId) public;
-	function safeTransferFrom(address _from, address _to, uint256 _tokenId)
-	public;
+	function exists(uint256 _tokenId) public view returns (bool _exists); // проверяет существует ли токен по ID
 	
-	function safeTransferFrom(
-		address _from,
-		address _to,
-		uint256 _tokenId,
-		bytes _data
-	)	public;
+	
+	function approve(address _to, uint256 _tokenId) public; // стандартаня фкнция одобрения + ID токена (по сути сервитут)
+	
+	function getApproved(uint256 _tokenId)public view returns (address _operator); // возвращает кому разрешено использовать
+	
+	function setApprovalForAll(address _operator, bool _approved) public; // базовый констурктор для функций (как в erc20basci)
+	
+	function isApprovedForAll(address _owner, address _operator)public view returns (bool);
+	
+	
+	function transferFrom(address _from, address _to, uint256 _tokenId) public; // базовый констурктор для функций (как в erc20basci)
+	
+	function safeTransferFrom(address _from, address _to, uint256 _tokenId)	public;
+	
+	function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes _data) public; // базовый констурктор для функций (как в erc20basci)
 }
 
+
 /**
- * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
+ * @title ERC-721 Не-Взаимозаменяемый Стандарт знака внимания, опционное расширение перечисления
  * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
 contract ERC721Enumerable is ERC721Basic {
-	function totalSupply() public view returns (uint256);
-	function tokenOfOwnerByIndex(
-		address _owner,
-		uint256 _index
-	)
-	public
-	view
-	returns (uint256 _tokenId);
+	function totalSupply() public view returns (uint256); // количество токенов
+	
+	function tokenOfOwnerByIndex(address _owner, uint256 _index) public view returns (uint256 _tokenId); // возвращает индекс токена по адресу владельца
 	
 	function tokenByIndex(uint256 _index) public view returns (uint256);
 }
 
 
 /**
- * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
+ * @title ERC-721Стандарт незаменяемого токена, дополнительный модуль метаданных
  * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
 contract ERC721Metadata is ERC721Basic {
-	function name() external view returns (string _name);
-	function symbol() external view returns (string _symbol);
-	function tokenURI(uint256 _tokenId) public view returns (string);
+	function name() external view returns (string _name); // возвращает имя токена
+	
+	function symbol() external view returns (string _symbol); // возвращает символ токена
+	
+	function tokenURI(uint256 _tokenId) public view returns (string); //
 }
 
+
 /**
- * @title ERC-721 Non-Fungible Token Standard, full implementation interface
+ * @title ERC-721 стандарт невзаимозаменяемого токена, полная реализация
  * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
-contract ERC721 is ERC721Basic, ERC721Enumerable, ERC721Metadata {
-}
+contract ERC721 is ERC721Basic, ERC721Enumerable, ERC721Metadata {}
+
 /**
- * @title ERC721 token receiver interface
- * @dev Interface for any contract that wants to support safeTransfers
- * from ERC721 asset contracts.
+ * @title ERC721 token интерфейс приемника
+ * @dev Интерфейс для любого контракта, который хочет поддерживать безопасные переводы из контрактов на активы ERC721.
  */
 contract ERC721Receiver {
 	/**
-	 * @dev Magic value to be returned upon successful reception of an NFT
-	 *  Equals to `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`,
-	 *  which can be also obtained as `ERC721Receiver(0).onERC721Received.selector`
+	 * @dev Магическое значение, которое будет возвращено при успешном получении NFT
+	 *  уравнение to `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`,
+	 *  что можно также получить как `ERC721Receiver(0).onERC721Received.selector`
 	 */
 	bytes4 internal constant ERC721_RECEIVED = 0xf0b9e5ba;
 	
 	/**
-	 * @notice Handle the receipt of an NFT
-	 * @dev The ERC721 smart contract calls this function on the recipient
-	 * after a `safetransfer`. This function MAY throw to revert and reject the
-	 * transfer. This function MUST use 50,000 gas or less. Return of other
-	 * than the magic value MUST result in the transaction being reverted.
-	 * Note: the contract address is always the message sender.
+	 * @notice Ручка получения NFT
+	 * @dev Смарт-контракт ERC721 вызывает эту функцию на получателя после "безопасной передачи". `safetransfer`.
+	 * Эта функция может бросить исключение, чтобы вернуться и отклонить передачу.
+	 * Эта функция должна использовать 50 000 газов или меньше
+	 * Возврат значения, отличного от магического, должен привести к возврату транзакции.
+	 * Note: адрес контракта всегда является отправителем сообщения.
 	 * @param _from The sending address
 	 * @param _tokenId The NFT identifier which is being transfered
 	 * @param _data Additional data with no specified format
-	 * @return `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`
-	 */
-	function onERC721Received(
-		address _from,
-		uint256 _tokenId,
-		bytes _data
-	) public returns(bytes4);
+	 * @return `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))` */
+	
+	function onERC721Received(address _from, uint256 _tokenId, bytes _data) public returns(bytes4);
 }
 
 /**
- * @title ERC721 Non-Fungible Token Standard basic implementation
+ * @title ERC721 Стандартная базовая реализация невзаимозаменяемого Токена
  * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
 contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
@@ -252,16 +230,15 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	 */
 	
 	bytes4 public constant InterfaceId_ERC721Exists = 0x4f558e79; // по умолчанию был private
-	/*
-	 * 0x4f558e79 ===
-	 *   bytes4(keccak256('exists(uint256)'))
-	 */
+	
+	/*  0x4f558e79 ===  bytes4(keccak256('exists(uint256)'))  */
 	
 	using SafeMath for uint256;
 	using AddressUtils for address;
 	
-	// Equals to `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`
-	// which can be also obtained as `ERC721Receiver(0).onERC721Received.selector`
+	// уравнение to `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`
+	// что можно также получить как `ERC721Receiver(0).onERC721Received.selector`
+	
 	bytes4 public constant ERC721_RECEIVED = 0xf0b9e5ba;
 	
 	// Mapping from token ID to owner
@@ -277,7 +254,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	mapping (address => mapping (address => bool)) internal operatorApprovals;
 	
 	/**
-	 * @dev Guarantees msg.sender is owner of the given token
+	 * @dev Гарантия что  msg.sender является владельцем данного токена
 	 * @param _tokenId uint256 ID of the token to validate its ownership belongs to msg.sender
 	 */
 	modifier onlyOwnerOf(uint256 _tokenId) {
@@ -449,8 +426,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 		uint256 _tokenId,
 		bytes _data
 	)
-	public
-	canTransfer(_tokenId)
+	public canTransfer(_tokenId)
 	{
 		transferFrom(_from, _to, _tokenId);
 		// solium-disable-next-line arg-overflow
@@ -468,9 +444,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 		address _spender,
 		uint256 _tokenId
 	)
-	internal
-	view
-	returns (bool)
+	internal view returns (bool)
 	{
 		address owner = ownerOf(_tokenId);
 		// Disable solium check because of
@@ -499,7 +473,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	 * Reverts if the token does not exist
 	 * @param _tokenId uint256 ID of the token being burned by the msg.sender
 	 */
-	function _burn(address _owner, uint256 _tokenId) internal {
+	function _burn(address _owner, uint256 _tokenId) public { // по умолчанию была internal
 		clearApproval(_owner, _tokenId);
 		removeTokenFrom(_owner, _tokenId);
 		emit Transfer(_owner, address(0), _tokenId);
@@ -535,7 +509,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	 * @param _from address representing the previous owner of the given token ID
 	 * @param _tokenId uint256 ID of the token to be removed from the tokens list of the given address
 	 */
-	function removeTokenFrom(address _from, uint256 _tokenId) internal {
+	function removeTokenFrom(address _from, uint256 _tokenId) public { // по умоланию была internal
 		require(ownerOf(_tokenId) == _from);
 		ownedTokensCount[_from] = ownedTokensCount[_from].sub(1);
 		tokenOwner[_tokenId] = address(0);
@@ -661,9 +635,7 @@ contract ERC721Token is SupportsInterfaceWithLookup, ERC721BasicToken, ERC721 {
 		address _owner,
 		uint256 _index
 	)
-	public
-	view
-	returns (uint256)
+	public view returns (uint256)
 	{
 		require(_index < balanceOf(_owner));
 		return ownedTokens[_owner][_index];
@@ -716,7 +688,7 @@ contract ERC721Token is SupportsInterfaceWithLookup, ERC721BasicToken, ERC721 {
 	 * @param _from address representing the previous owner of the given token ID
 	 * @param _tokenId uint256 ID of the token to be removed from the tokens list of the given address
 	 */
-	function removeTokenFrom(address _from, uint256 _tokenId) internal {
+	function removeTokenFrom(address _from, uint256 _tokenId) public { // по умолчанию функция internal
 		super.removeTokenFrom(_from, _tokenId);
 		
 		uint256 tokenIndex = ownedTokensIndex[_tokenId];
@@ -753,7 +725,7 @@ contract ERC721Token is SupportsInterfaceWithLookup, ERC721BasicToken, ERC721 {
 	 * @param _owner owner of the token to burn
 	 * @param _tokenId uint256 ID of the token being burned by the msg.sender
 	 */
-	function _burn(address _owner, uint256 _tokenId) internal {
+	function _burn(address _owner, uint256 _tokenId) public { // по умолчанию функция internal
 		super._burn(_owner, _tokenId);
 		
 		// Clear metadata (if any)
