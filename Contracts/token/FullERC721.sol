@@ -398,11 +398,10 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	}
 	
 	/**
-	 * @dev Safely transfers the ownership of a given token ID to another address
-	 * If the target address is a contract, it must implement `onERC721Received`,
-	 * which is called upon a safe transfer, and return the magic value
-	 * `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`; otherwise,
-	 * the transfer is reverted.
+	 * @dev Безопасно передает владение данным идентификатором токена на другой адрес
+	 * Если целевой адрес является контрактом, он должен реализовать`onERC721Received`,
+	 * который вызывается на безопасную передачу и возвращает магическое значение
+	 * `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`; иначе,  передача отменяется.
 	 * Requires the msg sender to be the owner, approved, or operator
 	 * @param _from current owner of the token
 	 * @param _to address to receive the ownership of the given token ID
@@ -416,25 +415,18 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	}
 	
 	/**
-	 * @dev Returns whether the given spender can transfer a given token ID
+	 * @dev Возвращает, может ли данный spender передать данный идентификатор токена
 	 * @param _spender address of the spender to query
 	 * @param _tokenId uint256 ID of the token to be transferred
 	 * @return bool whether the msg.sender is approved for the given token ID,
 	 *  is an operator of the owner, or is the owner of the token
 	 */
-	function isApprovedOrOwner(
-		address _spender,
-		uint256 _tokenId
-	) internal view returns (bool) 	{
+	function isApprovedOrOwner(address _spender, uint256 _tokenId) internal view returns (bool)  {
 		address owner = ownerOf(_tokenId);
 		// Disable solium check because of
 		// https://github.com/duaraghav8/Solium/issues/175
 		// solium-disable-next-line operator-whitespace
-		return (
-		_spender == owner ||
-		getApproved(_tokenId) == _spender ||
-		isApprovedForAll(owner, _spender)
-		);
+		return (_spender == owner ||getApproved(_tokenId) == _spender ||isApprovedForAll(owner, _spender));
 	}
 	/**
 	 * @dev Внутренняя функция для монтирования нового токена возвращается,
@@ -489,7 +481,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
 	 * @param _from address representing the previous owner of the given token ID
 	 * @param _tokenId uint256 ID of the token to be removed from the tokens list of the given address
 	 */
-	function removeTokenFrom(address _from, uint256 _tokenId) public { // по умоланию была internal
+	function removeTokenFrom(address _from, uint256 _tokenId) internal {
 		require(ownerOf(_tokenId) == _from);
 		ownedTokensCount[_from] = ownedTokensCount[_from].sub(1);
 		tokenOwner[_tokenId] = address(0);
@@ -665,7 +657,7 @@ contract ERC721Token is SupportsInterfaceWithLookup, ERC721BasicToken, ERC721 {
 	 * @param _from address representing the previous owner of the given token ID
 	 * @param _tokenId uint256 ID of the token to be removed from the tokens list of the given address
 	 */
-	function removeTokenFrom(address _from, uint256 _tokenId) public { // по умолчанию функция internal
+	function removeTokenFrom(address _from, uint256 _tokenId) internal {
 		super.removeTokenFrom(_from, _tokenId);
 		
 		uint256 tokenIndex = ownedTokensIndex[_tokenId];
