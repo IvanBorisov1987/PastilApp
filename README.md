@@ -14,9 +14,9 @@
 
 
 ## Порядок использования truffle для деплоя
-1. [Инициализировать проект truffle](https://truffleframework.com/docs/getting_started/project)
+1. [Инициализировать проект truffle.](https://truffleframework.com/docs/getting_started/project)
 
-2. [Протестировать](https://truffleframework.com/docs/getting_started/testing)
+2. [Протестировать.](https://truffleframework.com/docs/getting_started/testing)
 
 3. Задать файл конфигурации:
 
@@ -44,18 +44,20 @@
   
 2_deploy_contracts.js ()
 
-5. Запустить Geth с параметрами:
+5. синхронизировать цепочку блоков:
+
+`geth --rinkeby --rpc --rpcapi db,eth,net,web3,personal`
+
+6. Запустить Geth с параметрами:
 
 `geth --rinkeby --rpc --rpcapi db,eth,net,web3,personal --unlock="Адрес"`
 
-6. Ввести пароль, в моем случае MIST
-
-7. синхронизировать цепочку блоков
+7. Ввести пароль, в моем случае MIST.
 
 8. в корневой папке проекта Truffle ввести:
 
 `truffle migrate --network rinkeby`
 
-9. Получить адреса в консоли
+9. Получить адреса в консоли.
 
-10. При желании можно подключить управление web интрефеус через remix или wallet.ethereum 
+10. При желании можно подключить управление web интрефеус через remix или wallet.ethereum.
