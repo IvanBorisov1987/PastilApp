@@ -50,7 +50,7 @@
 
 6. Запустить Geth с параметрами:
 
-`geth --rinkeby --rpc --rpcapi db,eth,net,web3,personal --unlock="Адрес"`
+`geth --rinkeby --rpc --rpcapi db,eth,net,web3,personal --unlock="0x81Cfe8eFdb6c7B7218DDd5F6bda3AA4cd1554Fd2"`
 
 7. Ввести пароль, в моем случае MIST.
 
